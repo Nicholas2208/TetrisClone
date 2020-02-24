@@ -21,10 +21,14 @@ public class Main extends Application{
 		ResourceBundle resource = null;
 		FXMLLoader fxmlLoader = new FXMLLoader(location, resource);
 		Parent root = fxmlLoader.load();
+		GuiController c = fxmlLoader.getController();
 		
+		primaryStage.setTitle("TetrisFX");
 		Scene scene = new Scene(root, 400, 510);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
+		new GameController(c);
 	}
 
 }
