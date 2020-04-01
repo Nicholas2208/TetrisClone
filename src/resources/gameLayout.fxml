@@ -2,8 +2,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ToggleButton?>
+<?import gui.GameOverPanel ?>
 
 <Pane fx:controller="gui.GuiController" xmlns:fx="http://javafx.com/fxml">
    <GridPane fx:id="brickPanel" vgap="1" hgap="1" />
@@ -27,7 +29,7 @@
 		   </BorderPane>
        </VBox>
        <Button text="New Game" styleClass="ipad-dark-grey"/>
-       <ToggleButton text="Pause" styleClass="ipad-dark-grey" />
+       <ToggleButton text="Pause" fx:id="pauseButton" styleClass="ipad-dark-grey" />
        <VBox>
             <Text styleClass="helpInfo" wrappingWidth="150">
                 <![CDATA[
@@ -46,6 +48,13 @@
             </Text>
          </VBox>
    </VBox>
+   
+   <Group fx:id="groupNotification" layoutX="14" layoutY="203">
+       <GameOverPanel fx:id="gameOverPanel" />
+   </Group>
+   
+   
+   
    
    <stylesheets>
       <URL value="@window_style.css" />

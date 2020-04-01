@@ -1,5 +1,7 @@
 package gui;
 
+import logic.ClearRow;
+import logic.DownData;
 import logic.SimpleBoard;
 import logic.ViewData;
 import logic.events.EventSource;
@@ -20,11 +22,20 @@ public class GameController implements InputEventListener{
 	}
 
 	@Override
-	public ViewData onDownEvent(MoveEvent event) {
+	public DownData onDownEvent(MoveEvent event) {
 		boolean canMove = board.moveBrickDown();
+		ClearRow clearRow = null;
 		if(!canMove) {
 			board.mergeBrickToBackground();
-			board.createNewBrick();
+			clearRow = board.clearRows();
+			if(clearRow.getLinesRemoved() > 0) {
+				board.getScore().add(clearRow.getScoreBonus());
+			}
+			
+			if(board.createNewBrick()) {
+				viewController.gameOver();
+			}
+			
 		}else {
 			if(event.getEventSource() == EventSource.USER) {
 				board.getScore().add(1);
@@ -33,7 +44,7 @@ public class GameController implements InputEventListener{
 		
 		viewController.refreshGameBackground(board.getBoardMatrix());
 		
-		return board.getViewData();
+		return new DownData(clearRow, board.getViewData());
 	}
 
 	@Override
@@ -46,6 +57,13 @@ public class GameController implements InputEventListener{
 	@Override
 	public ViewData onRightEvent() {
 		board.moveBrickRight();
+		
+		return board.getViewData();
+	}
+
+	@Override
+	public ViewData onRotateEvent() {
+		board.rotateBrickLeft();
 		
 		return board.getViewData();
 	}

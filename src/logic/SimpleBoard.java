@@ -25,11 +25,15 @@ public class SimpleBoard {
 	}
 
 	public boolean createNewBrick() {
+		currentShape = 0;
 		Brick currentBrick = brickGenerator.getBrick();
 		setBrick(currentBrick);
 		currentOffset = new Point(4, 0);
 
-		return true;
+		return MatrixOperations.intersects(currentGameMatrix,
+				getCurrentShape(), 
+				currentOffset.x, 
+				currentOffset.y);
 	}
 
 	public boolean moveBrickDown() {
@@ -100,5 +104,42 @@ public class SimpleBoard {
 				currentOffset.y);
 
 	}
+	
+	public NextShapeInfo getNextShape() {
+		int nextShape = currentShape;
+		nextShape = ++nextShape % brick.getBrickMatrix().size();
+		return new NextShapeInfo(brick.getBrickMatrix().get(nextShape), nextShape);
+	}
+
+	public boolean rotateBrickLeft() {
+		NextShapeInfo nextShape = getNextShape();
+		boolean conflict = MatrixOperations.intersects(currentGameMatrix,
+				nextShape.getShape(),
+				currentOffset.x, 
+				currentOffset.y);
+		if(conflict) {
+			return false;
+		}else {
+			setCurrentShape(nextShape.getPosition());
+			return true;
+		}
+	}
+
+	public void setCurrentShape(int currentShape) {
+		this.currentShape = currentShape;
+	}
+
+	public ClearRow clearRows() {
+		ClearRow clearRow = MatrixOperations.checkRemoving(currentGameMatrix);
+		currentGameMatrix = clearRow.getNextMatrix();
+		
+		return clearRow;
+	}
+	
+	
+	
+	
+	
+	
 
 }
